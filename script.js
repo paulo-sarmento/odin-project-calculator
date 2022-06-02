@@ -4,81 +4,105 @@ const digits = document.querySelectorAll('.digit')
 const operators = document.querySelectorAll('.operator')
 const backspace = document.querySelector('.backspace')
 
+let number = 0
 let number1 = 0
 let number2 = 0
 let operator = ''
 let arr = []
+let comma = ''
 
 const getInput = (event) => {
   let digit = event.target
-  if(/clear/.test(digit.classList)) {
+  if(/comma/.test(digit.classList)) {
+    if(display.innerText == '') {
+      display.innerText = `0${digit.innerText}`
+      comma = '.'
+      arr.push('0', comma, digit.innerText)
+    } else if (comma == '') {
+      display.innerText += digit.innerText
+      comma = '.'
+      arr.push(comma)
+    }
+  } else if (/clear/.test(digit.classList)) {
+    number = 0
     number1 = 0
     number2 = 0
     operator = ''
     arr = []
     display.innerText = ''
     displayHistory.innerText = ''
+    comma = ''
   } else if (number1 === 0) {
     if(!/operator/.test(digit.classList) && !/backspace/.test(digit.classList)) { //se o dígito clicado não for igual um operator e nem igual ao backspace
       showInput(digit)
       arr.push(digit.innerText)
+      number = arr.toString().replace(/,/g, '')
     } else if (/backspace/.test(digit.classList)) {
       arr.pop()
-      display.innerText = arr.toString().replace(/,/g, '') //atribui o que tem no arr para o innerText do display como string e remove todas as vírgulas da string passada.
+      display.innerText = arr.toString().replace(/,/g, '').replace(/\./, ',') //atribui o que tem no arr para o innerText do display como string e remove todas as vírgulas da string passada.
+      number = display.innerText.replace(/,/, '.')
     }
-    if(display.innerText !== '' && /operator/.test(digit.classList)) { //se o display não for vazio e o dígito clicado for um operator
+    else if(display.innerText !== '' && /operator/.test(digit.classList)) { //se o display não for vazio e o dígito clicado for um operator
       arr = []
       if(!/equals/.test(digit.classList)) { //se o operador clicado não for o de igualdade
-        number1 = display.innerText
+        number1 = number
+        number = 0
+        comma = ''
         operator = digit.innerText
         display.innerText = ''
-        displayHistory.innerText = `${number1} ${operator}`
+        displayHistory.innerText = `${number1.toString().replace(/\./, ',')} ${operator}`
       } else {
         displayHistory.innerText = `${display.innerText} ${digit.innerText}`
         display.innerText = ''
+        number = 0
+        comma = ''
       }
     }
-  }
-  if(number1 !== 0 && number2 !== 0) {
+  } else if(number1 !== 0 && number2 !== 0) {
     if(/equals/.test(digit.classList)) {
       let result = operate(operator, Number(number1), Number(number2))
-      displayHistory.innerText = `${number1} ${operator} ${number2}=`
-      display.innerText = result
-      number1 = Number(result)
+      displayHistory.innerText = `${number1.toString().replace(/\./, ',')} ${operator} ${number2.toString().replace(/\./, ',')}=`
+      display.innerText = String(result).replace(/\./, ',')
+      number1 = String(result)
     } else if (/backspace/.test(digit.classList)) {
       displayHistory.innerText = ''
     } else if (/operator/.test(digit.classList) ) {
       number2 = 0
       operator = digit.innerText
       display.innerText = ''
-      displayHistory.innerText = `${number1} ${operator}`
+      displayHistory.innerText = `${number1.toString().replace(/\./, ',')} ${operator}`
     }
-  }
-  if(number1 !== 0 && number2 == 0) {
+  } else if(number1 !== 0 && number2 === 0) {
     if(!/operator/.test(digit.classList) && !/backspace/.test(digit.classList)) {
       showInput(digit)
       arr.push(digit.innerText)
+      number = arr.toString().replace(/,/g, '')
     } else if (/backspace/.test(digit.classList)) {
       arr.pop()
-      display.innerText = arr.toString().replace(/,/g, '')
+      display.innerText = arr.toString().replace(/,/g, '').replace(/\./, ',')
+      number = display.innerText.replace(/,/, '.')
     }
-    if(display.innerText !== '' && /operator/.test(digit.classList)) { //se o display não for vazio e o dígito clicado for um operator
+    else if(display.innerText !== '' && /operator/.test(digit.classList)) { //se o display não for vazio e o dígito clicado for um operator
+      arr = []
       if(!/equals/.test(digit.classList)) { //se o operador clicado não for o de igualdade
-        console.log('farofa')
-        number2 = display.innerText
+        number2 = number
         let result = operate(operator, Number(number1), Number(number2))
-        display.innerText = result
-        number1 = Number(result)
+        display.innerText = String(result).replace(/\./, ',')
+        number1 = String(result)
         operator = digit.innerText
-        displayHistory.innerText = `${result} ${operator}`
+        displayHistory.innerText = `${String(result).replace(/\./, ',')} ${operator}`
         display.innerText = ''
+        number = 0
         number2 = 0
+        comma = ''
       } else {
-        number2 = display.innerText
+        number2 = number
         let result = operate(operator, Number(number1), Number(number2))
-        displayHistory.innerText = `${displayHistory.innerText} ${number2} =`
-        display.innerText = result
-        number1 = Number(result)
+        displayHistory.innerText = `${displayHistory.innerText} ${number2.toString().replace(/\./, ',')} =`
+        display.innerText = String(result).replace(/\./, ',')
+        number1 = String(result)
+        number = 0
+        comma = ''
       }
     }
   }
@@ -91,7 +115,13 @@ const showInput = (digit) => {
 const add = (n1, n2) => n1 + n2
 const subtract = (n1, n2) => n1 - n2
 const multiply = (n1, n2) => n1 * n2
-const divide = (n1, n2) => n1 / n2
+const divide = (n1, n2) => {
+  if(n2 === 0) {
+    return alert('Não é possível dividir por zero')
+  } else {
+    return n1 / n2
+  }
+}
 
 const operate = (operator, n1, n2) => {
   if(operator == '+') {
