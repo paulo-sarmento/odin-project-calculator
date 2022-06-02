@@ -9,6 +9,7 @@ let number1 = 0
 let number2 = 0
 let operator = ''
 let arr = []
+let arr2 = []
 let comma = ''
 
 const getInput = (event) => {
@@ -17,7 +18,7 @@ const getInput = (event) => {
     if(display.innerText == '') {
       display.innerText = `0${digit.innerText}`
       comma = '.'
-      arr.push('0', comma, digit.innerText)
+      arr.push('0', comma)
     } else if (comma == '') {
       display.innerText += digit.innerText
       comma = '.'
@@ -27,18 +28,27 @@ const getInput = (event) => {
     reset()
   } else if (number1 === 0) {
     if(!/operator/.test(digit.classList) && !/backspace/.test(digit.classList)) { //se o dígito clicado não for igual um operator e nem igual ao backspace
-      if(arr.toString().replace(/,/g, '').replace(/\./, '').length < 16) { //verifica se a length do arr é menor que 16, desconsiderando vírgula e ponto
+      if(arr.join('').replace(/\./, '').length < 16) { //verifica se a length do arr é menor que 16, desconsiderando o ponto
         showInput(digit)
         arr.push(digit.innerText)
-        number = arr.toString().replace(/,/g, '')
+        arr2 = arr.join('')
+        number = arr2
       }
     } else if (/backspace/.test(digit.classList)) {
-      arr.pop()
-      display.innerText = arr.toString().replace(/,/g, '').replace(/\./, ',') //atribui o que tem no arr para o innerText do display como string e remove todas as vírgulas da string passada.
-      number = display.innerText.replace(/,/, '.')
+      let validation = arr.pop()
+      if(validation === '.') {
+        comma = ''
+        validation = ''
+        display.innerText = arr.join('') //atribui o que tem no arr para o innerText do display como string, remove o ponto por vírgula
+        number = display.innerText
+      } else {
+        display.innerText = arr.join('').replace(/\./, ',') //atribui o que tem no arr para o innerText do display como string remove o ponto por vírgula
+        number = display.innerText.replace(/,/, '.')
+      }
     }
     else if(display.innerText !== '' && /operator/.test(digit.classList)) { //se o display não for vazio e o dígito clicado for um operator
       arr = []
+      arr2 = []
       if(!/equals/.test(digit.classList)) { //se o operador clicado não for o de igualdade
         number1 = number
         number = 0
@@ -75,18 +85,27 @@ const getInput = (event) => {
     }
   } else if(number1 !== 0 && number2 === 0) {
     if(!/operator/.test(digit.classList) && !/backspace/.test(digit.classList)) { //se o dígito clicado não for igual um operator e nem igual ao backspace
-      if(arr.toString().replace(/,/g, '').replace(/\./, '').length < 16) { //verifica se a length do arr é menor que 16, desconsiderando vírgula e ponto
+      if(arr.join('').replace(/\./, '').length < 16) { //verifica se a length do arr é menor que 16, desconsiderando o ponto
         showInput(digit)
         arr.push(digit.innerText)
-        number = arr.toString().replace(/,/g, '')
+        arr2 = arr.join('')
+        number = arr2
       }
     } else if (/backspace/.test(digit.classList)) {
-      arr.pop()
-      display.innerText = arr.toString().replace(/,/g, '').replace(/\./, ',')
-      number = display.innerText.replace(/,/, '.')
+      let validation = arr.pop()
+      if(validation === '.'){
+        comma = ''
+        validation =''
+        display.innerText = arr.join('').replace(/\./, ',') //atribui o que tem no arr para o innerText do display como string.
+        number = display.innerText.replace(/,/, '.')
+      } else {
+        display.innerText = arr.join('').replace(/\./, ',') //atribui o que tem no arr para o innerText do display como string e remove o ponto por vírgula
+        number = display.innerText.replace(/,/, '.')
+      }
     }
     else if(display.innerText !== '' && /operator/.test(digit.classList)) { //se o display não for vazio e o dígito clicado for um operator
       arr = []
+      arr2 = []
       if(!/equals/.test(digit.classList)) { //se o operador clicado não for o de igualdade
         number2 = number
         if(operator === '/' && number == 0) {
