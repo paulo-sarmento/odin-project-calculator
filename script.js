@@ -24,14 +24,7 @@ const getInput = (event) => {
       arr.push(comma)
     }
   } else if (/clear/.test(digit.classList)) {
-    number = 0
-    number1 = 0
-    number2 = 0
-    operator = ''
-    arr = []
-    display.innerText = ''
-    displayHistory.innerText = ''
-    comma = ''
+    reset()
   } else if (number1 === 0) {
     if(!/operator/.test(digit.classList) && !/backspace/.test(digit.classList)) { //se o dígito clicado não for igual um operator e nem igual ao backspace
       showInput(digit)
@@ -86,23 +79,33 @@ const getInput = (event) => {
       arr = []
       if(!/equals/.test(digit.classList)) { //se o operador clicado não for o de igualdade
         number2 = number
-        let result = operate(operator, Number(number1), Number(number2))
-        display.innerText = String(result).replace(/\./, ',')
-        number1 = String(result)
-        operator = digit.innerText
-        displayHistory.innerText = `${String(result).replace(/\./, ',')} ${operator}`
-        display.innerText = ''
-        number = 0
-        number2 = 0
-        comma = ''
+        if(operator === '/' && number == 0) {
+          let result = operate(operator, Number(number1), Number(number2))
+          reset()
+        } else {
+          let result = operate(operator, Number(number1), Number(number2))
+          display.innerText = String(result).replace(/\./, ',')
+          number1 = String(result)
+          operator = digit.innerText
+          displayHistory.innerText = `${String(result).replace(/\./, ',')} ${operator}`
+          display.innerText = ''
+          number = 0
+          number2 = 0
+          comma = ''
+        }
       } else {
         number2 = number
-        let result = operate(operator, Number(number1), Number(number2))
-        displayHistory.innerText = `${displayHistory.innerText} ${number2.toString().replace(/\./, ',')} =`
-        display.innerText = String(result).replace(/\./, ',')
-        number1 = String(result)
-        number = 0
-        comma = ''
+        if(operator === '/' && number2 == 0) {
+          let result = operate(operator, Number(number1), Number(number2))
+          reset()
+        } else {
+          let result = operate(operator, Number(number1), Number(number2))
+          displayHistory.innerText = `${displayHistory.innerText} ${number2.toString().replace(/\./, ',')} =`
+          display.innerText = String(result).replace(/\./, ',')
+          number1 = String(result)
+          number = 0
+          comma = ''
+        }
       }
     }
   }
@@ -110,6 +113,17 @@ const getInput = (event) => {
 
 const showInput = (digit) => {
   display.innerText += digit.innerText
+}
+
+const reset = () => {
+  number = 0
+  number1 = 0
+  number2 = 0
+  operator = ''
+  arr = []
+  display.innerText = ''
+  displayHistory.innerText = ''
+  comma = ''
 }
 
 const add = (n1, n2) => n1 + n2
