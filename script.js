@@ -27,9 +27,11 @@ const getInput = (event) => {
     reset()
   } else if (number1 === 0) {
     if(!/operator/.test(digit.classList) && !/backspace/.test(digit.classList)) { //se o dígito clicado não for igual um operator e nem igual ao backspace
-      showInput(digit)
-      arr.push(digit.innerText)
-      number = arr.toString().replace(/,/g, '')
+      if(arr.toString().replace(/,/g, '').replace(/\./, '').length < 16) { //verifica se a length do arr é menor que 16, desconsiderando vírgula e ponto
+        showInput(digit)
+        arr.push(digit.innerText)
+        number = arr.toString().replace(/,/g, '')
+      }
     } else if (/backspace/.test(digit.classList)) {
       arr.pop()
       display.innerText = arr.toString().replace(/,/g, '').replace(/\./, ',') //atribui o que tem no arr para o innerText do display como string e remove todas as vírgulas da string passada.
@@ -43,7 +45,7 @@ const getInput = (event) => {
         comma = ''
         operator = digit.innerText
         display.innerText = ''
-        displayHistory.innerText = `${number1.toString().replace(/\./, ',')} ${operator}`
+        displayHistory.innerText = `${String(number1).replace(/\./, ',').slice(0, 17)} ${operator}`
       } else {
         displayHistory.innerText = `${display.innerText} ${digit.innerText}`
         display.innerText = ''
@@ -53,23 +55,31 @@ const getInput = (event) => {
     }
   } else if(number1 !== 0 && number2 !== 0) {
     if(/equals/.test(digit.classList)) {
-      let result = operate(operator, Number(number1), Number(number2))
-      displayHistory.innerText = `${number1.toString().replace(/\./, ',')} ${operator} ${number2.toString().replace(/\./, ',')}=`
-      display.innerText = String(result).replace(/\./, ',')
-      number1 = String(result)
+      let result = operate(operator, Number(number1), Number(number2))    
+      if(String(result).replace(/\./, '').length > 16) { //verifica se a length do resultado da operação é maior que 16, desconsiderando o ponto
+        displayHistory.innerText = `${number1.toString().replace(/\./, ',').slice(0, 17)} ${operator} ${number2.toString().replace(/\./, ',').slice(0, 17)}=`
+        display.innerText = String(result).replace(/\./, ',').slice(0, 17)
+        number1 = String(result).slice(0, 17)
+      } else {
+        displayHistory.innerText = `${number1.toString().replace(/\./, ',')} ${operator} ${number2.toString().replace(/\./, ',')}=`
+        display.innerText = String(result).replace(/\./, ',')
+        number1 = String(result)
+      }
     } else if (/backspace/.test(digit.classList)) {
       displayHistory.innerText = ''
     } else if (/operator/.test(digit.classList) ) {
       number2 = 0
       operator = digit.innerText
       display.innerText = ''
-      displayHistory.innerText = `${number1.toString().replace(/\./, ',')} ${operator}`
+      displayHistory.innerText = `${number1.toString().replace(/\./, ',').slice(0, 17)} ${operator}`
     }
   } else if(number1 !== 0 && number2 === 0) {
-    if(!/operator/.test(digit.classList) && !/backspace/.test(digit.classList)) {
-      showInput(digit)
-      arr.push(digit.innerText)
-      number = arr.toString().replace(/,/g, '')
+    if(!/operator/.test(digit.classList) && !/backspace/.test(digit.classList)) { //se o dígito clicado não for igual um operator e nem igual ao backspace
+      if(arr.toString().replace(/,/g, '').replace(/\./, '').length < 16) { //verifica se a length do arr é menor que 16, desconsiderando vírgula e ponto
+        showInput(digit)
+        arr.push(digit.innerText)
+        number = arr.toString().replace(/,/g, '')
+      }
     } else if (/backspace/.test(digit.classList)) {
       arr.pop()
       display.innerText = arr.toString().replace(/,/g, '').replace(/\./, ',')
@@ -84,14 +94,25 @@ const getInput = (event) => {
           reset()
         } else {
           let result = operate(operator, Number(number1), Number(number2))
-          display.innerText = String(result).replace(/\./, ',')
-          number1 = String(result)
-          operator = digit.innerText
-          displayHistory.innerText = `${String(result).replace(/\./, ',')} ${operator}`
-          display.innerText = ''
-          number = 0
-          number2 = 0
-          comma = ''
+          if(String(result).replace(/\./, '').length > 16) { //verifica se a length do resultado da operação é maior que 16, desconsiderando o ponto
+            display.innerText = String(result).replace(/\./, ',').slice(0, 17)
+            number1 = String(result).slice(0, 17)
+            operator = digit.innerText
+            displayHistory.innerText = `${String(result).replace(/\./, ',').slice(0, 17)} ${operator}`
+            display.innerText = ''
+            number = 0
+            number2 = 0
+            comma = ''
+          } else {
+            display.innerText = String(result).replace(/\./, ',').slice(0, 17)
+            number1 = String(result).slice(0, 17)
+            operator = digit.innerText
+            displayHistory.innerText = `${String(result).replace(/\./, ',').slice(0, 17)} ${operator}`
+            display.innerText = ''
+            number = 0
+            number2 = 0
+            comma = ''
+          }
         }
       } else {
         number2 = number
@@ -100,11 +121,20 @@ const getInput = (event) => {
           reset()
         } else {
           let result = operate(operator, Number(number1), Number(number2))
-          displayHistory.innerText = `${displayHistory.innerText} ${number2.toString().replace(/\./, ',')} =`
-          display.innerText = String(result).replace(/\./, ',')
-          number1 = String(result)
-          number = 0
-          comma = ''
+          if(String(result).replace(/\./, '').length > 16) { //verifica se a length do resultado da operação é maior que 16, desconsiderando o ponto
+            displayHistory.innerText = `${displayHistory.innerText} ${number2.toString().replace(/\./, ',')} =`
+            display.innerText = String(result).replace(/\./, ',').slice(0, 17)
+            number1 = String(result).slice(0, 17)
+            console.log(number1)
+            number = 0
+            comma = ''
+          } else {
+            displayHistory.innerText = `${displayHistory.innerText} ${number2.toString().replace(/\./, ',')} =`
+            display.innerText = String(result).replace(/\./, ',').slice(0, 17)
+            number1 = String(result).slice(0, 17)
+            number = 0
+            comma = ''
+          }
         }
       }
     }
