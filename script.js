@@ -20,6 +20,9 @@ const getInput = (event) => {
     digit = document.querySelector(`div[data-key='${event.key}']`)
   }
   digit.classList.add('active')
+  setTimeout(() => {
+    digit.classList.remove('active')
+  }, 100);
   if(/comma/.test(digit.classList)) {
     if(display.innerText == '') {
       display.innerText = `0${digit.innerText}`
@@ -203,16 +206,8 @@ const operate = (operator, n1, n2) => {
   }
 }
 
-const removeTransition = (e) => {
-  if (e.propertyName !== 'background-color') return;
-  setTimeout(() => {
-    e.target.classList.remove('active');
-  }, .100);
-}
-
 digits.forEach(digit => {
   digit.addEventListener('click', getInput)
-  digit.addEventListener('transitionend', removeTransition)
 })
 
 window.addEventListener('keydown', getInput)
