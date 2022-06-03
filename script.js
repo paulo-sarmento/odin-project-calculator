@@ -13,7 +13,12 @@ let arr2 = []
 let comma = ''
 
 const getInput = (event) => {
-  let digit = event.target
+  let digit = ''
+  if(event.type === 'click') {
+    digit = event.target
+  } else if (event.type === 'keydown') {
+    digit = document.querySelector(`div[data-key='${event.key}']`)
+  }
   if(/comma/.test(digit.classList)) {
     if(display.innerText == '') {
       display.innerText = `0${digit.innerText}`
@@ -144,7 +149,6 @@ const getInput = (event) => {
             displayHistory.innerText = `${displayHistory.innerText} ${number2.toString().replace(/\./, ',')} =`
             display.innerText = String(result).replace(/\./, ',').slice(0, 17)
             number1 = String(result).slice(0, 17)
-            console.log(number1)
             number = 0
             comma = ''
           } else {
@@ -201,3 +205,5 @@ const operate = (operator, n1, n2) => {
 digits.forEach(digit => {
   digit.addEventListener('click', getInput)
 })
+
+window.addEventListener('keydown', getInput)
