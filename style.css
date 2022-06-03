@@ -120,6 +120,11 @@ body {
 .digit {
   background: #ededed;
   padding: 1.5em;
+  transition: all .1s;
+}
+
+.active {
+  background-color: #3333;
 }
 
 .display-history > span {
