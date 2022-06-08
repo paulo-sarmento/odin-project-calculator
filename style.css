@@ -1,31 +1,53 @@
 body {
-  margin: 1em;
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
   padding: 0;
   font-family: 'Oswald', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .calculator {
   position: relative;
   box-sizing: border-box;
   margin: 0 auto;
-  width: 350px;
-  display: flex;
-  flex-direction: column;
+  width: 360px;
   align-items: center;
-  border: 1px solid black;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  padding-bottom: 1em;
+  background: #333;
 }
 
 .display {
   display: flex;
   align-items: center;
-  margin: 1em 0;
-  width: 90%;
-  height: 70px;
-  border: 1px solid black;
+  justify-content: flex-end;
+  position: relative;
+  text-align: end;
+  height: 100px;
+  margin: 10px;
+  background: #BFBFBF;
 }
 
-.display > span {
-  margin-left: 1em;
+.display > span,
+.display-history > span {
+  margin-right: 15px;
+  font-size: 1.2rem;
+}
+
+.display-history {
+  position: absolute;
+  top: 10px;
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48
 }
 
 .digits {
@@ -33,16 +55,22 @@ body {
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(5, 1fr);
   grid-template-areas: 
-  "backspace divide multi ."
-  "seven eight nine subt"
-  "four five six ad"
-  "one two three equals"
-  ". zero comma clear"
+  "backspace backspace clear multi"
+  "seven eight nine divide"
+  "four five six subt"
+  "one two three ad"
+  "zero comma equals equals"
   ;
   gap: 3px;
-  padding-bottom: 1em;
   cursor: pointer;
   font-size: 1.2rem;
+  margin: 0 10px;
+}
+
+.digit {
+  background: #ededed;
+  padding: .7em 1.5em;
+  transition: all .1s;
 }
 
 .zero {
@@ -86,7 +114,9 @@ body {
 }
 
 .equals {
+  text-align: center;
   grid-area: equals;
+  background: #808080;
 }
 
 .ad {
@@ -106,6 +136,7 @@ body {
 }
 
 .backspace {
+  text-align: center;
   grid-area: backspace;
 }
 
@@ -117,26 +148,4 @@ body {
   grid-area: clear;
 }
 
-.digit {
-  background: #ededed;
-  padding: 1.5em;
-  transition: all .1s;
-}
-
-.active {
-  background-color: #3333;
-}
-
-.display-history > span {
-  position: absolute;
-  bottom: 530px;
-  left: 33px;
-}
-
-.material-symbols-outlined {
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 48
-}
+.active { background-color: #3333;}
