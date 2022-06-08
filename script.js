@@ -2,12 +2,10 @@ const display = document.querySelector(".display > span");
 const displayHistory = document.querySelector(".display-history > span");
 const digits = document.querySelectorAll(".digit");
 
-let number = 0;
 let number1 = 0;
 let number2 = 0;
 let operator = "";
 let arr = [];
-let arr2 = [];
 let haveComma = false;
 let result = 0;
 
@@ -158,7 +156,6 @@ const showInput = (digit) => {
 };
 
 const reset = () => {
-  number = 0;
   number1 = 0;
   number2 = 0;
   operator = "";
